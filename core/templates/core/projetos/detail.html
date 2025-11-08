@@ -9,7 +9,10 @@
 <h3>Membros</h3>
 <ul>
 {% for m in projeto.membros.all %}
-    <li>{{ m.username }}</li>
+    <li>
+        {{ m.username }}
+        {% if m == projeto.criador %} <strong>(criador)</strong> {% endif %}
+    </li>
 {% empty %}
     <li>Nenhum membro</li>
 {% endfor %}

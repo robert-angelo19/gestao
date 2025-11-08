@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Dashboard</h2>
+
+<h3>Minhas Empresas (como criador)</h3>
+<ul>
+{% for empresa in empresas %}
+    {% if empresa.criador == user %}
+    <li>
+        <a href="{% url 'core:empresa_detail' empresa.id %}">
+            {{ empresa.nome }} (Criador)
+        </a>
+    </li>
+    {% endif %}
+{% empty %}
+    <li>Nenhuma empresa criada por você</li>
+{% endfor %}
+</ul>
+
+<h3>Empresas onde participo</h3>
+<ul>
+{% for empresa in empresas %}
+    {% if empresa.criador != user %}
+    <li>
+        <a href="{% url 'core:empresa_detail' empresa.id %}">
+            {{ empresa.nome }} (Membro)
+        </a>
+    </li>
+    {% endif %}
+{% empty %}
+    <li>Não há empresas em que participo</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'core:empresa_create' %}">Criar nova empresa</a>
+
+{% endblock %}

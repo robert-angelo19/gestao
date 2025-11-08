@@ -9,9 +9,10 @@
         <a href="{% url 'core:empresa_detail' empresa.id %}">
             {{ empresa.nome }}
         </a>
+        {% if empresa.criador == user %} <strong>(minha empresa)</strong> {% endif %}
     </li>
 {% empty %}
-    <li>Nenhuma empresa</li>
+    <li>Não há empresas disponíveis</li>
 {% endfor %}
 </ul>
 

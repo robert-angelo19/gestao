@@ -14,9 +14,10 @@
         <a href="{% url 'core:projeto_detail' projeto.id %}">
             {{ projeto.nome }}
         </a>
+        {% if projeto.criador == user %} <strong>(meu projeto)</strong> {% endif %}
     </li>
 {% empty %}
-    <li>Nenhum projeto</li>
+    <li>Não há projetos em que participo</li>
 {% endfor %}
 </ul>
 

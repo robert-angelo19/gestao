@@ -74,9 +74,8 @@ def empresa_delete(request, pk):
 # PROJETO
 @login_required
 def projeto_create(request):
-    #criar projeto
     if request.method == 'POST':
-        form = ProjetoForm(request.POST)
+        form = ProjetoForm(request.POST, user=request.user)  # ← Adicione user aqui
         if form.is_valid():
             projeto = form.save(commit=False)
             projeto.criador = request.user
@@ -85,7 +84,7 @@ def projeto_create(request):
             messages.success(request, 'Projeto criado.')
             return redirect('core:empresa_detail', pk=projeto.empresa.pk)
     else:
-        form = ProjetoForm()
+        form = ProjetoForm(user=request.user)  # ← E aqui também
     return render(request, 'core/projetos/form.html', {'form': form})
 
 @login_required
@@ -100,19 +99,19 @@ def projeto_detail(request, pk):
 
 @login_required
 def projeto_update(request, pk):
-    #update de projeto, só o criador
     projeto = get_object_or_404(Projeto, pk=pk)
     if projeto.criador != request.user:
         messages.error(request, 'Apenas o criador pode editar.')
         return redirect('core:projeto_detail', pk=pk)
+    
     if request.method == 'POST':
-        form = ProjetoForm(request.POST, instance=projeto)
+        form = ProjetoForm(request.POST, instance=projeto, user=request.user)  
         if form.is_valid():
             form.save()
             messages.success(request, 'Projeto atualizado.')
             return redirect('core:projeto_detail', pk=pk)
     else:
-        form = ProjetoForm(instance=projeto)
+        form = ProjetoForm(instance=projeto, user=request.user)  
     return render(request, 'core/projetos/form.html', {'form': form})
 
 @login_required
