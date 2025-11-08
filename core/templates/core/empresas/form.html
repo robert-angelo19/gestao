@@ -1,13 +1,19 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-<h2>Empresa</h2>
+<h2>{% if form.instance.pk %}Editar Empresa{% else %}Nova Empresa{% endif %}</h2>
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Salvar</button>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    
+    {% if form.instance.pk %}
+        <!-- Editando: volta para detalhes da empresa -->
+        <a href="{% url 'core:empresa_detail' form.instance.pk %}" class="btn btn-secondary">Voltar</a>
+    {% else %}
+        <!-- Criando nova: volta para dashboard -->
+        <a href="{% url 'core:dashboard' %}" class="btn btn-secondary">Voltar</a>
+    {% endif %}
 </form>
-
-<a href="{% url 'core:empresa_list' %}">Voltar</a>
 {% endblock %}

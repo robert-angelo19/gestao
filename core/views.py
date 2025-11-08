@@ -1,15 +1,40 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Empresa, Projeto
 from .forms import EmpresaForm, ProjetoForm
 from django.db.models import Q
 from django.contrib.auth.models import User
+from .forms_user import UserForm, UserEditForm
 
 @login_required
 def dashboard(request):
-    # mostra empresas q o user pode ver (que ele criou ou projetos q participa)
-    empresas = Empresa.objects.filter(Q(criador=request.user) | Q(projetos__membros=request.user)).distinct()
+    # MOSTRA empresas onde o user:
+    # 1. É criador da empresa OU
+    # 2. É membro de algum projeto da empresa OU  
+    # 3. É criador de algum projeto da empresa (NOVO)
+    empresas = Empresa.objects.filter(
+        Q(criador=request.user) | 
+        Q(projetos__membros=request.user) |
+        Q(projetos__criador=request.user)  # ← ESTA LINHA RESOLVE O PROBLEMA
+    ).distinct()
+    
+    # DEBUG - verificar o que está sendo encontrado
+    print(f"=== DEBUG DASHBOARD ===")
+    print(f"Usuário: {request.user.username}")
+    
+    empresas_criador = Empresa.objects.filter(criador=request.user)
+    print(f"Empresas como criador: {[e.nome for e in empresas_criador]}")
+    
+    empresas_membro = Empresa.objects.filter(projetos__membros=request.user)
+    print(f"Empresas com projetos como membro: {[e.nome for e in empresas_membro]}")
+    
+    empresas_criador_projeto = Empresa.objects.filter(projetos__criador=request.user)
+    print(f"Empresas com projetos como criador: {[e.nome for e in empresas_criador_projeto]}")
+    
+    print(f"Empresas no final: {[e.nome for e in empresas]}")
+    print("=======================")
+    
     return render(request, 'core/dashboard.html', {'empresas': empresas})
 
 # EMPRESA
@@ -135,11 +160,87 @@ def projeto_membros_manage(request, pk):
         messages.error(request, 'Apenas o criador pode gerenciar membros.')
         return redirect('core:projeto_detail', pk=pk)
     if request.method == 'POST':
-        # Espera um array com ids de usuários
+        # espera um array com ids de usuarios
         membros_ids = request.POST.getlist('membros')
+
+        #garantir que o criador sempre seja membro
+        if str(projeto.criador.id) not in membros_ids:
+            membros_ids.append(str(projeto.criador.id))
+
         projeto.membros.set(membros_ids)
         messages.success(request, 'Membros atualizados.')
         return redirect('core:projeto_detail', pk=pk)
     # GET
     all_users = User.objects.all()
     return render(request, 'core/projetos/membros.html', {'projeto': projeto, 'all_users': all_users})
+
+# Função para verificar se é superuser
+def superuser_required(view_func):
+    decorated_view_func = login_required(user_passes_test(
+        lambda u: u.is_superuser,
+        login_url='/',
+        redirect_field_name=None
+    )(view_func))
+    return decorated_view_func
+
+@superuser_required
+def user_list(request):
+    users = User.objects.all().order_by('-date_joined')
+    return render(request, 'core/users/list.html', {'users': users})
+
+@superuser_required
+def user_create(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f'Usuário {user.username} criado com sucesso!')
+            return redirect('core:user_list')
+    else:
+        form = UserForm()
+    return render(request, 'core/users/form.html', {'form': form})
+
+@superuser_required
+def user_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    return render(request, 'core/users/detail.html', {'user_obj': user})
+
+@superuser_required
+def user_update(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Usuário {user.username} atualizado com sucesso!')
+            return redirect('core:user_list')
+    else:
+        form = UserEditForm(instance=user)
+    return render(request, 'core/users/form.html', {'form': form})
+
+@superuser_required
+def user_delete(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        username = user.username
+        user.delete()
+        messages.success(request, f'Usuário {username} excluído com sucesso!')
+        return redirect('core:user_list')
+    return render(request, 'core/users/confirm_delete.html', {'user_obj': user})
+
+@login_required
+def projeto_create_global(request):
+    "cria projeto vendo qualquer empresa"
+    if request.method == 'POST':
+        form = ProjetoForm(request.POST, user=request.user)
+        if form.is_valid():
+            projeto = form.save(commit=False)
+            projeto.criador = request.user
+            projeto.save()
+            form.save_m2m()
+            messages.success(request, 'Projeto criado.')
+            return redirect('core:empresa_detail', pk=projeto.empresa.pk)
+    else:
+        form = ProjetoForm(user=request.user)
+        form.fields['empresa'].queryset = Empresa.objects.all()
+    return render(request, 'core/projetos/form.html', {'form': form})

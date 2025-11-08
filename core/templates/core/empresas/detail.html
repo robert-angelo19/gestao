@@ -21,16 +21,17 @@
 {% endfor %}
 </ul>
 
-<a href="{% url 'core:projeto_create' %}">Criar projeto</a>
-<br><br>
-
-{% if empresa.criador == user %}
-    <a href="{% url 'core:empresa_update' empresa.id %}">Editar</a>
-    |
-    <form method="post" action="{% url 'core:empresa_delete' empresa.id %}" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Excluir</button>
-    </form>
-{% endif %}
-
+<div style="margin-top: 20px;">
+    {% if empresa.criador == user %}
+        <!--<a href="{% url 'core:projeto_create' %}" class="btn btn-primary">Criar projeto</a>-->
+        <a href="{% url 'core:empresa_update' empresa.id %}" class="btn btn-primary">Editar empresa</a>
+        
+        <form method="post" action="{% url 'core:empresa_delete' empresa.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Excluir empresa</button>
+        </form>
+    {% endif %}
+    
+    <a href="{% url 'core:dashboard' %}" class="btn btn-secondary">Voltar ao Dashboard</a>
+</div>
 {% endblock %}

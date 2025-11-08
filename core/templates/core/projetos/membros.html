@@ -6,6 +6,10 @@
 <form method="post" id="membros-form">
     {% csrf_token %}
     
+    {% if user == projeto.criador %}
+        <input type="hidden" name="membros" value="{{ projeto.criador.id }}">
+    {% endif %}
+
     <div style="margin-bottom: 15px;">
         <input type="text" id="search-membros" placeholder="🔍 Buscar usuários..." 
                style="padding: 8px; width: 100%; border: 1px solid #ddd; border-radius: 4px;">
@@ -28,7 +32,7 @@
     <button type="submit" style="margin-top: 15px;">Salvar</button>
 </form>
 
-<a href="{% url 'core:projeto_detail' projeto.id %}">Voltar</a>
+<a href="{% url 'core:projeto_detail' projeto.id %}" class="btn btn-secondary">Voltar</a>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

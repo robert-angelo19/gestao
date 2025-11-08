@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Gerenciamento de Usuários</h2>
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'core:user_create' %}" class="btn btn-primary">Novo Usuário</a>
+</div>
+
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+    <thead>
+        <tr style="background: #f8f9fa;">
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Username</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Email</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Nome</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Ativo</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Data Registro</th>
+            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr style="border-bottom: 1px solid #dee2e6;">
+            <td style="padding: 12px;"><strong>{{ user.username }}</strong></td>
+            <td style="padding: 12px;">{{ user.email|default:"-" }}</td>
+            <td style="padding: 12px;">
+                {% if user.first_name or user.last_name %}
+                    {{ user.first_name }} {{ user.last_name }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td style="padding: 12px;">
+                {% if user.is_active %}
+                    <span style="color: #28a745;">● Ativo</span>
+                {% else %}
+                    <span style="color: #dc3545;">● Inativo</span>
+                {% endif %}
+            </td>
+            <td style="padding: 12px;">{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+            <td style="padding: 12px;">
+                <a href="{% url 'core:user_detail' user.id %}" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.875rem;">Ver</a>
+                <a href="{% url 'core:user_update' user.id %}" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.875rem;">Editar</a>
+                {% if user != request.user %}
+                    <a href="{% url 'core:user_delete' user.id %}" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.875rem;">Excluir</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="padding: 20px; text-align: center;">Nenhum usuário cadastrado</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'core:dashboard' %}" class="btn btn-secondary">Voltar ao Dashboard</a>
+{% endblock %}

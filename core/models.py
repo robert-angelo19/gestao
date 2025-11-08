@@ -24,10 +24,10 @@ class Projeto(models.Model):
 
     def __str__(self):
         return f"{self.nome} ({self.empresa.nome})"
-    
     def save(self, *args, **kwargs):
+        # Primeiro salva o projeto
         super().save(*args, **kwargs)
         
-        # adiciona o criador do projeto como membro
+        # Adiciona o criador automaticamente como membro
         if self.criador not in self.membros.all():
             self.membros.add(self.criador)

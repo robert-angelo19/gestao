@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Detalhes do Usuário: {{ user_obj.username }}</h2>
+
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <p><strong>Username:</strong> {{ user_obj.username }}</p>
+    <p><strong>Email:</strong> {{ user_obj.email|default:"Não informado" }}</p>
+    <p><strong>Nome completo:</strong> 
+        {% if user_obj.first_name or user_obj.last_name %}
+            {{ user_obj.first_name }} {{ user_obj.last_name }}
+        {% else %}
+            Não informado
+        {% endif %}
+    </p>
+    <p><strong>Status:</strong> 
+        {% if user_obj.is_active %}
+            <span style="color: #28a745;">● Ativo</span>
+        {% else %}
+            <span style="color: #dc3545;">● Inativo</span>
+        {% endif %}
+    </p>
+    <p><strong>Superusuário:</strong> {% if user_obj.is_superuser %}Sim{% else %}Não{% endif %}</p>
+    <p><strong>Data de registro:</strong> {{ user_obj.date_joined|date:"d/m/Y H:i" }}</p>
+    <p><strong>Último login:</strong> {{ user_obj.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</p>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'core:user_update' user_obj.id %}" class="btn btn-primary">Editar</a>
+    {% if user_obj != request.user %}
+        <a href="{% url 'core:user_delete' user_obj.id %}" class="btn btn-danger">Excluir</a>
+    {% endif %}
+    <a href="{% url 'core:user_list' %}" class="btn btn-secondary">Voltar à lista</a>
+</div>
+{% endblock %}

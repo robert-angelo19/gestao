@@ -5,10 +5,13 @@
 
 <p>Tem certeza que deseja excluir a empresa: <b>{{ empresa.nome }}</b>?</p>
 
+<p style="color: #dc3545; font-weight: bold; margin: 15px 0;">
+    ⚠️ Esta ação não pode ser desfeita!
+</p>
+
 <form method="post">
     {% csrf_token %}
-    <button type="submit">Excluir</button>
+    <button type="submit" class="btn btn-danger">Excluir empresa</button>
+    <a href="{% url 'core:empresa_detail' empresa.id %}" class="btn btn-secondary">Cancelar</a>
 </form>
-
-<a href="{% url 'core:empresa_detail' empresa.id %}">Cancelar</a>
 {% endblock %}

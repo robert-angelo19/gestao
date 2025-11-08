@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Excluir Usuário</h2>
+
+<p>Tem certeza que deseja excluir o usuário: <b>{{ user_obj.username }}</b>?</p>
+
+<p style="color: #dc3545; font-weight: bold; margin: 15px 0;">
+    ⚠️ Esta ação não pode ser desfeita! Todas as empresas e projetos deste usuário serão afetados.
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir usuário</button>
+    <a href="{% url 'core:user_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

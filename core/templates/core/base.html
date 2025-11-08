@@ -3,35 +3,44 @@
 <head>
     <meta charset="UTF-8" />
     <title>Gestão de Projetos</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 </head>
 <body>
+    <header>
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <p>
+                    Olá <strong>{{ user.username }}</strong> |
+        
+                    {% if user.is_superuser %}
+                        <a href="{% url 'core:user_list' %}" class="btn logout-btn" style="margin-right: 10px;">👥 Gerenciar Usuários</a>
+                    {% endif %}
+        
+                    <form method="post" action="{% url 'logout' %}" class="logout-form" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn logout-btn">Sair</button>
+                    </form>
+                </p>
+            {% else %}
+              <p><a href="{% url 'login' %}" class="login-link">Entrar</a></p>
+            {% endif %}
+        </div>
+    </header>
+
     {% if messages %}
-      <ul>
-        {% for m in messages %}
-          <li>{{ m }}</li>
-        {% endfor %}
-      </ul>
+        <ul class="messages">
+            {% for m in messages %}
+                <li>{{ m }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
-    {% if user.is_authenticated %}
-        <p>Olá {{ user.username }} | 
-           <form method="post" action="{% url 'logout' %}" style="display:inline;">
-               {% csrf_token %}
-               <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer;">
-                   Sair
-               </button>
-           </form>
-        </p>
-    {% else %}
-        <p><a href="{% url 'login' %}">Entrar</a></p>
-    {% endif %}
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
 
-    <hr>
-
-    {% block content %}
-    {% endblock %}
-
-    <!--JS-->
     {% load static %}
     <script src="{% static 'core/js/script.js' %}"></script>
 </body>

@@ -17,4 +17,11 @@ urlpatterns = [
     path('projetos/<int:pk>/editar/', views.projeto_update, name='projeto_update'),
     path('projetos/<int:pk>/excluir/', views.projeto_delete, name='projeto_delete'),
     path('projetos/<int:pk>/membros/', views.projeto_membros_manage, name='projeto_membros_manage'),
+    path('projetos/novo-global/', views.projeto_create_global, name='projeto_create_global'),  # ← NOVA
+    # Users
+    path('users/', views.user_list, name='user_list'),
+    path('users/novo/', views.user_create, name='user_create'),
+    path('users/<int:pk>/', views.user_detail, name='user_detail'),
+    path('users/<int:pk>/editar/', views.user_update, name='user_update'),
+    path('users/<int:pk>/excluir/', views.user_delete, name='user_delete'),
 ]
