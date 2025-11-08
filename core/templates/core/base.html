@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Gestão de Projetos</title>
+</head>
+<body>
+    {% if messages %}
+      <ul>
+        {% for m in messages %}
+          <li>{{ m }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <p>Olá {{ user.username }} | <a href="{% url 'logout' %}">Sair</a></p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Entrar</a></p>
+    {% endif %}
+
+    <hr>
+
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

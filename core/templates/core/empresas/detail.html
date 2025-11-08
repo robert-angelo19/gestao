@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>{{ empresa.nome }}</h2>
+
+<p>{{ empresa.descricao }}</p>
+
+<hr>
+
+<h3>Projetos</h3>
+<ul>
+{% for projeto in projetos %}
+    <li>
+        <a href="{% url 'core:projeto_detail' projeto.id %}">
+            {{ projeto.nome }}
+        </a>
+    </li>
+{% empty %}
+    <li>Nenhum projeto</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'core:projeto_create' %}">Criar projeto</a>
+<br><br>
+
+{% if empresa.criador == user %}
+    <a href="{% url 'core:empresa_update' empresa.id %}">Editar</a>
+    |
+    <form method="post" action="{% url 'core:empresa_delete' empresa.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Excluir</button>
+    </form>
+{% endif %}
+
+{% endblock %}

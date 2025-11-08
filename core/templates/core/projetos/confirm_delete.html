@@ -1,0 +1,14 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Excluir Projeto</h2>
+
+<p>Tem certeza que deseja excluir <b>{{ projeto.nome }}</b>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Excluir</button>
+</form>
+
+<a href="{% url 'core:projeto_detail' projeto.id %}">Cancelar</a>
+{% endblock %}

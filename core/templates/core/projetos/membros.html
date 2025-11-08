@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h2>Gerenciar membros — {{ projeto.nome }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {% for user in all_users %}
+        <label>
+            <input type="checkbox" name="membros" value="{{ user.id }}"
+                {% if user in projeto.membros.all %}checked{% endif %}
+            >
+            {{ user.username }}
+        </label><br>
+    {% endfor %}
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="{% url 'core:projeto_detail' projeto.id %}">Voltar</a>
+{% endblock %}
