@@ -31,13 +31,13 @@ class ProjetoForm(forms.ModelForm):
         else:
             self.fields['membros'].queryset = self.fields['membros'].queryset.exclude(id=user.id)
     
-    # ↓↓↓ MÉTODO save CORRETO (SEM return projeto no final) ↓↓↓
+    
     def save(self, commit=True):
         projeto = super().save(commit=False)
         if commit:
             projeto.save()
-            # GARANTE que o criador seja membro
+            # garante que o criador do proj seja membro
             if projeto.criador not in projeto.membros.all():
                 projeto.membros.add(projeto.criador)
             self.save_m2m()
-        return projeto  # ← ESTE return DEVE ESTAR AQUI, DENTRO DO save
+        return projeto  

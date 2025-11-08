@@ -5,11 +5,11 @@
 
 <h3>Minhas Empresas (como criador)</h3>
 <ul>
-{% for empresa in empresas %}
-    {% if empresa.criador == user %}
+{% for item in empresas_com_papel %}
+    {% if item.papel == 'criador_empresa' %}
     <li>
-        <a href="{% url 'core:empresa_detail' empresa.id %}">
-            {{ empresa.nome }}
+        <a href="{% url 'core:empresa_detail' item.empresa.id %}">
+            {{ item.empresa.nome }}
         </a>
         <span class="badge badge-creator">Criador da Empresa</span>
     </li>
@@ -21,21 +21,19 @@
 
 <h3>Empresas onde participo</h3>
 <ul>
-{% for empresa in empresas %}
-    {% if empresa.criador != user %}
+{% for item in empresas_com_papel %}
+    {% if item.papel != 'criador_empresa' %}
     <li>
-        <a href="{% url 'core:empresa_detail' empresa.id %}">
-            {{ empresa.nome }}
+        <a href="{% url 'core:empresa_detail' item.empresa.id %}">
+            {{ item.empresa.nome }}
         </a>
         
-        {# Verificar o tipo de participação usando filtros simples #}
-        {% for projeto in empresa.projetos.all %}
-            {% if projeto.criador == user %}
-                <span class="badge badge-creator">Criador do Projeto</span>
-            {% elif user in projeto.membros.all %}
-                <span class="badge badge-member">Membro do Projeto</span>
-            {% endif %}
-        {% endfor %}
+        {# Mostrar apenas UM badge baseado no papel #}
+        {% if item.papel == 'criador_projeto' %}
+            <span class="badge badge-creator">Criador de Projeto</span>
+        {% elif item.papel == 'membro_projeto' %}
+            <span class="badge badge-member">Membro de Projeto</span>
+        {% endif %}
     </li>
     {% endif %}
 {% empty %}
@@ -47,5 +45,4 @@
     <a href="{% url 'core:empresa_create' %}" class="btn btn-primary">Criar nova empresa</a>
     <a href="{% url 'core:projeto_create_global' %}" class="btn btn-primary">Criar novo projeto</a>
 </div>
-
 {% endblock %}

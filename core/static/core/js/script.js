@@ -1,17 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ JavaScript carregado - Fase 1 (Funcionalidades Seguras)');
     
-    // 1. CONFIRMAÇÕES DE EXCLUSÃO (já testada e funciona)
+    
     setupDeleteConfirmations();
-    
-    // 2. FEEDBACK VISUAL NOS FORMULÁRIOS (seguro)
     setupFormFeedback();
-    
-    // 3. MENSAGENS AUTOMÁTICAS (seguro - apenas timing)
     setupAutoHideMessages();
 });
 
-// 1. CONFIRMAÇÕES DE EXCLUSÃO
+//confim para exclusao
 function setupDeleteConfirmations() {
     const deleteForms = document.querySelectorAll('form[action*="excluir"]');
     
@@ -32,7 +28,7 @@ function setupDeleteConfirmations() {
     });
 }
 
-// 2. FEEDBACK VISUAL NOS FORMULÁRIOS
+//feedback nos forms
 function setupFormFeedback() {
     const forms = document.querySelectorAll('form:not([action*="excluir"])');
     
@@ -58,7 +54,7 @@ function setupFormFeedback() {
     });
 }
 
-// 3. MENSAGENS AUTOMÁTICAS
+//mensagens auto
 function setupAutoHideMessages() {
     const messages = document.querySelectorAll('.messages li');
     

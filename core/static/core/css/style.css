@@ -1,4 +1,4 @@
-/* ===== RESET E CONFIGURAÇÕES GERAIS ===== */
+/* configs gerais e reset */
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +15,7 @@ body {
     margin: 0 auto;
 }
 
-/* ===== HEADER E NAVEGAÇÃO ===== */
+/*header e nav */
 header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -38,37 +38,76 @@ header {
     font-size: 1.1rem;
 }
 
-.logout-form {
-    display: inline;
-}
-
-.logout-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.login-link {
-    color: white;
+/* botoes geral */
+.btn, button, input[type="submit"] {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    margin: 0.5rem 0.5rem 0.5rem 0;
+    border: none;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    font-family: inherit;
 }
 
-.login-link:hover {
-    text-decoration: underline;
+/* botoes primarios*/
+.btn-primary, 
+button[type="submit"]:not(.logout-btn),
+input[type="submit"],
+a[href*="create"], 
+a[href*="novo"], 
+a[href*="editar"] {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
 }
 
-/* ===== MENSAGENS ===== */
+/* botoes secundarios*/
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+/* botao danger para exlcuir*/
+.btn-danger,
+a[href*="excluir"],
+form[action*="excluir"] button {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+/*botao logout especial*/
+.logout-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/*efeitos hover*/
+.btn:hover, button:hover, input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover { box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3); }
+.btn-secondary:hover { 
+    background: #5a6268; 
+    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3); 
+}
+.btn-danger:hover { box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3); }
+.logout-btn:hover { background: rgba(255, 255, 255, 0.3) !important; }
+
+button:disabled, .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* mensagens*/
 .messages {
     list-style: none;
     margin-bottom: 2rem;
@@ -87,37 +126,14 @@ header {
     margin-bottom: 0;
 }
 
-/* Cores para diferentes tipos de mensagem */
-.messages li:contains("sucesso"),
-.messages li:contains("Sucesso"),
-.messages li:contains("criado"),
-.messages li:contains("atualizado") {
-    border-left-color: #28a745;
-    background: #d4edda;
-    color: #155724;
-}
-
-.messages li:contains("erro"),
-.messages li:contains("Erro") {
-    border-left-color: #dc3545;
-    background: #f8d7da;
-    color: #721c24;
-}
-
-.messages li:contains("aviso"),
-.messages li:contains("Aviso") {
-    border-left-color: #ffc107;
-    background: #fff3cd;
-    color: #856404;
-}
-
-/* ===== CONTEÚDO PRINCIPAL ===== */
+/*conteudo principal*/
 .content {
     background: white;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease;
 }
 
 h1, h2, h3 {
@@ -144,7 +160,7 @@ h3 {
     color: #764ba2;
 }
 
-/* ===== LISTAS ===== */
+/* listas*/
 ul {
     list-style: none;
     margin: 1rem 0;
@@ -177,52 +193,7 @@ li a:hover {
     color: #667eea;
 }
 
-/* ===== BOTÕES ===== */
-.btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    margin: 0.5rem 0.5rem 0.5rem 0;
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
-}
-
-.btn-danger {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-}
-
-.btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
-}
-
-/* ===== FORMULÁRIOS ===== */
+/*forms */
 form {
     margin: 1rem 0;
 }
@@ -259,31 +230,12 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Checkboxes para membros */
 input[type="checkbox"] {
     margin-right: 0.5rem;
     transform: scale(1.2);
 }
 
-/* ===== DASHBOARD ESPECÍFICO ===== */
-.dashboard-section {
-    background: white;
-    padding: 1.5rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-    border-left: 4px solid #667eea;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.empresa-creator {
-    border-left-color: #28a745;
-}
-
-.empresa-member {
-    border-left-color: #17a2b8;
-}
-
-/* ===== BADGES ===== */
+/* badges */
 .badge {
     display: inline-block;
     padding: 0.25rem 0.5rem;
@@ -304,58 +256,7 @@ input[type="checkbox"] {
     color: #0c5460;
 }
 
-.badge-danger {
-    background: #f8d7da;
-    color: #721c24;
-}
-
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    
-    .user-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-    
-    h2 {
-        font-size: 1.5rem;
-    }
-    
-    .content {
-        padding: 1rem;
-    }
-    
-    .btn {
-        display: block;
-        width: 100%;
-        margin: 0.5rem 0;
-    }
-}
-
-/* ===== ANIMAÇÕES ===== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.content {
-    animation: fadeIn 0.5s ease;
-}
-
-/* ===== ESTADOS ESPECIAIS ===== */
+/* estados especiais */
 .empty-state {
     text-align: center;
     padding: 3rem;
@@ -370,124 +271,45 @@ input[type="checkbox"] {
     margin-bottom: 1rem;
 }
 
-.highlight {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
+/* animacoes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* ===== BOTÕES CONSISTENTES ===== */
-button, .btn, input[type="submit"] {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    margin: 0.5rem 0.5rem 0.5rem 0;
-    border: none;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-    font-family: inherit;
+/* responsividade*/
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    
+    .content {
+        padding: 1rem;
+    }
+    
+    .btn {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0;
+    }
 }
 
-/* Botão Primário (Ações principais) */
-button[type="submit"]:not(.logout-btn),
-input[type="submit"],
-.btn-primary,
-a[href*="create"],
-a[href*="novo"],
-a[href*="editar"] {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-}
 
-/* Botão Secundário (Links, Voltar) */
-.btn-secondary,
-a:not([href*="create"]):not([href*="novo"]):not([href*="editar"]):not([href*="excluir"]) {
-    background: #6c757d;
-    color: white;
-}
-
-/* Botão Perigo (Excluir) */
-.btn-danger,
-a[href*="excluir"],
-form[action*="excluir"] button {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-}
-
-/* Botão Logout (Especial) */
-.logout-btn {
-    background: rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Efeitos Hover */
-button:hover, .btn:hover, input[type="submit"]:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Efeitos específicos por tipo */
-button[type="submit"]:not(.logout-btn):hover,
-input[type="submit"]:hover,
-.btn-primary:hover,
-a[href*="create"]:hover,
-a[href*="novo"]:hover,
-a[href*="editar"]:hover {
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
-}
-
-.btn-secondary:hover {
-    background: #5a6268;
-    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
-}
-
-.btn-danger:hover,
-a[href*="excluir"]:hover,
-form[action*="excluir"] button:hover {
-    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
-}
-
-.logout-btn:hover {
-    background: rgba(255, 255, 255, 0.3) !important;
-    transform: translateY(-2px);
-}
-
-/* Estados desabilitados */
-button:disabled, .btn:disabled, input[type="submit"]:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Links dentro de botões */
-.btn a {
-    color: inherit;
-    text-decoration: none;
-}
-
-/* Botões em formulários inline */
-form[style*="inline"] button {
-    margin: 0 0.25rem;
-}
-
-/* Botão de login específico */
-form[action*="login"] button {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    width: 100%;
-    margin-top: 1rem;
-}
-
-form[action*="login"] button:hover {
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
-}
-
-/* Corrigir link "Entrar" no header quando deslogado */
+/* correcao de links no header */
 header .login-link {
     background: transparent !important;
     color: white !important;
@@ -497,34 +319,7 @@ header .login-link {
     text-decoration: none !important;
 }
 
-header .login-link:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: none !important;
-}
-
-/* Garantir que links no header não fiquem com fundo cinza */
-header a:not(.logout-btn) {
-    background: transparent !important;
-}
-
-/* Corrigir links de lista - não devem ter fundo de botão */
-ul li a {
-    background: transparent !important;
-    color: #2c3e50 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: inline !important;
-}
-
-ul li a:hover {
-    background: transparent !important;
-    color: #667eea !important;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Links em listas não devem ter estilo de botão */
+/* correcao em links de lista*/
 .content ul li a {
     background: transparent !important;
     color: #2c3e50 !important;
@@ -541,36 +336,14 @@ ul li a:hover {
     box-shadow: none !important;
 }
 
-/* Garantir que botões secundários tenham cor consistente */
-a.btn-secondary {
-    background: #6c757d !important;
-    color: white !important;
-    text-decoration: none !important;
-    display: inline-block !important;
-    padding: 0.75rem 1.5rem !important;
-}
-
-a.btn-secondary:hover {
-    background: #5a6268 !important;
-    color: white !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3) !important;
-}
-
-/* Regra importante: só aplicar estilos de botão em elementos com classe .btn */
+/* Links gerais sem classe btn */
 a:not([class*="btn"]):not(.login-link) {
     background: transparent !important;
     color: #667eea !important;
     text-decoration: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: inline !important;
 }
 
 a:not([class*="btn"]):not(.login-link):hover {
     color: #764ba2 !important;
     text-decoration: underline !important;
-    transform: none !important;
-    box-shadow: none !important;
 }
-

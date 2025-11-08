@@ -9,33 +9,35 @@ from .forms_user import UserForm, UserEditForm
 
 @login_required
 def dashboard(request):
-    # MOSTRA empresas onde o user:
-    # 1. É criador da empresa OU
-    # 2. É membro de algum projeto da empresa OU  
-    # 3. É criador de algum projeto da empresa (NOVO)
     empresas = Empresa.objects.filter(
         Q(criador=request.user) | 
         Q(projetos__membros=request.user) |
-        Q(projetos__criador=request.user)  # ← ESTA LINHA RESOLVE O PROBLEMA
+        Q(projetos__criador=request.user)
     ).distinct()
     
-    # DEBUG - verificar o que está sendo encontrado
-    print(f"=== DEBUG DASHBOARD ===")
-    print(f"Usuário: {request.user.username}")
+    # determinar papel em cada empresa
+    empresas_com_papel = []
+    for empresa in empresas:
+        papel = None
+        
+        if empresa.criador == request.user:
+            papel = 'criador_empresa'
+        else:
+            # se é criador de algum projeto
+            if empresa.projetos.filter(criador=request.user).exists():
+                papel = 'criador_projeto'
+            # verificar se é membro de algum projeto
+            elif empresa.projetos.filter(membros=request.user).exists():
+                papel = 'membro_projeto'
+        
+        empresas_com_papel.append({
+            'empresa': empresa,
+            'papel': papel
+        })
     
-    empresas_criador = Empresa.objects.filter(criador=request.user)
-    print(f"Empresas como criador: {[e.nome for e in empresas_criador]}")
-    
-    empresas_membro = Empresa.objects.filter(projetos__membros=request.user)
-    print(f"Empresas com projetos como membro: {[e.nome for e in empresas_membro]}")
-    
-    empresas_criador_projeto = Empresa.objects.filter(projetos__criador=request.user)
-    print(f"Empresas com projetos como criador: {[e.nome for e in empresas_criador_projeto]}")
-    
-    print(f"Empresas no final: {[e.nome for e in empresas]}")
-    print("=======================")
-    
-    return render(request, 'core/dashboard.html', {'empresas': empresas})
+    return render(request, 'core/dashboard.html', {
+        'empresas_com_papel': empresas_com_papel
+    })
 
 # EMPRESA
 @login_required
@@ -54,7 +56,7 @@ def empresa_create(request):
             empresa.criador = request.user
             empresa.save()
             messages.success(request, 'Empresa criada.')
-            return redirect('core:empresa_list')
+            return redirect('core:empresa_detail', pk=empresa.pk)
     else:
         form = EmpresaForm()
     return render(request, 'core/empresas/form.html', {'form': form})
@@ -174,7 +176,7 @@ def projeto_membros_manage(request, pk):
     all_users = User.objects.all()
     return render(request, 'core/projetos/membros.html', {'projeto': projeto, 'all_users': all_users})
 
-# Função para verificar se é superuser
+#verificar se é superuser
 def superuser_required(view_func):
     decorated_view_func = login_required(user_passes_test(
         lambda u: u.is_superuser,

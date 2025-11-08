@@ -1,6 +1,4 @@
 from django.db import models
-
-# Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -25,9 +23,9 @@ class Projeto(models.Model):
     def __str__(self):
         return f"{self.nome} ({self.empresa.nome})"
     def save(self, *args, **kwargs):
-        # Primeiro salva o projeto
+        
         super().save(*args, **kwargs)
         
-        # Adiciona o criador automaticamente como membro
+        # add o criador como membro
         if self.criador not in self.membros.all():
             self.membros.add(self.criador)
