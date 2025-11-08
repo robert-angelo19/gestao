@@ -3,18 +3,86 @@
 {% block content %}
 <h2>Gerenciar membros — {{ projeto.nome }}</h2>
 
-<form method="post">
+<form method="post" id="membros-form">
     {% csrf_token %}
-    {% for user in all_users %}
-        <label>
-            <input type="checkbox" name="membros" value="{{ user.id }}"
-                {% if user in projeto.membros.all %}checked{% endif %}
-            >
-            {{ user.username }}
-        </label><br>
-    {% endfor %}
-    <button type="submit">Salvar</button>
+    
+    <div style="margin-bottom: 15px;">
+        <input type="text" id="search-membros" placeholder="🔍 Buscar usuários..." 
+               style="padding: 8px; width: 100%; border: 1px solid #ddd; border-radius: 4px;">
+    </div>
+    
+    <div id="member-counter" style="margin: 10px 0; padding: 8px; background: #e9ecef; border-radius: 4px; font-weight: bold;"></div>
+    
+    <div id="membros-list">
+        {% for user in all_users %}
+            <label style="display: block; margin: 5px 0;">
+                <input type="checkbox" name="membros" value="{{ user.id }}"
+                    {% if user in projeto.membros.all %}checked{% endif %}
+                    {% if user == projeto.criador %}disabled{% endif %}>
+                {{ user.username }}
+                {% if user == projeto.criador %} <strong>(criador)</strong> {% endif %}
+            </label>
+        {% endfor %}
+    </div>
+    
+    <button type="submit" style="margin-top: 15px;">Salvar</button>
 </form>
 
 <a href="{% url 'core:projeto_detail' projeto.id %}">Voltar</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('membros-form');
+    const checkboxes = document.querySelectorAll('input[name="membros"]');
+    const counter = document.getElementById('member-counter');
+    
+    //atualizar contador
+    function updateCounter() {
+        const selected = document.querySelectorAll('input[name="membros"]:checked').length;
+        const total = checkboxes.length;
+        counter.textContent = `✅ ${selected} de ${total} membro(s) selecionado(s)`;
+        counter.style.background = selected > 0 ? '#d4edda' : '#e9ecef';
+    }
+    
+    // busca em tempo real
+    const searchInput = document.getElementById('search-membros');
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const labels = document.querySelectorAll('#membros-list label');
+        
+        labels.forEach(label => {
+            const username = label.textContent.toLowerCase();
+            label.style.display = username.includes(searchTerm) ? 'block' : 'none';
+        });
+        updateCounter();
+    });
+    
+    // atualizar contador quando checkboxes mudam
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateCounter);
+    });
+    
+    // vonfirmar antes de sair sem salvar
+    let formChanged = false;
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            formChanged = true;
+        });
+    });
+    
+    form.addEventListener('submit', function() {
+        formChanged = false;
+    });
+    
+    window.addEventListener('beforeunload', function(e) {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = 'Você tem alterações não salvas. Tem certeza que deseja sair?';
+        }
+    });
+    
+    //inicializar contador
+    updateCounter();
+});
+</script>
 {% endblock %}
