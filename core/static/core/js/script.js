@@ -30,20 +30,27 @@ function setupDeleteConfirmations() {
 
 //feedback nos forms
 function setupFormFeedback() {
-    const forms = document.querySelectorAll('form:not([action*="excluir"])');
+    const forms = document.querySelectorAll('form');
     
     forms.forEach(form => {
+        // Pula forms de login e logout
+        if (form.action.includes('/login/') || 
+            form.action.includes('/logout/') ||
+            form.querySelector('input[name="username"]') ||
+            form.querySelector('input[name="password"]')) {
+            return; // Skip login/logout forms
+        }
+        
         form.addEventListener('submit', function(e) {
             const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
+            if (submitBtn && !submitBtn.classList.contains('logout-btn')) {
                 const originalText = submitBtn.textContent;
                 submitBtn.textContent = '⏳ Salvando...';
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.7';
                 
-                // Restaurar após 5 segundos (caso haja erro no envio)
                 setTimeout(() => {
-                    if (submitBtn.disabled) { // Se ainda estiver disabled, significa que não recarregou
+                    if (submitBtn.disabled) {
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
                         submitBtn.style.opacity = '1';

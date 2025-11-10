@@ -23,7 +23,9 @@
                     </form>
                 </p>
             {% else %}
-              <p><a href="{% url 'login' %}" class="login-link">Entrar</a></p>
+                {% if not request.path == '/login/' and not request.path == '/accounts/login/' %}
+                    <p><a href="{% url 'login' %}" class="login-link">Entrar</a></p>
+                {% endif %}
             {% endif %}
         </div>
     </header>

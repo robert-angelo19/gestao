@@ -86,6 +86,7 @@ form[action*="excluir"] button {
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
+
 /*efeitos hover*/
 .btn:hover, button:hover, input[type="submit"]:hover {
     transform: translateY(-2px);
@@ -347,3 +348,4 @@ a:not([class*="btn"]):not(.login-link):hover {
     color: #764ba2 !important;
     text-decoration: underline !important;
 }
+
